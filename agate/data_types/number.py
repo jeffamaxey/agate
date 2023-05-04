@@ -77,7 +77,7 @@ class Number(DataType):
         elif d is True:
             return Decimal(1)
         elif not isinstance(d, six.string_types):
-            raise CastError('Can not parse value "%s" as Decimal.' % d)
+            raise CastError(f'Can not parse value "{d}" as Decimal.')
 
         d = d.strip()
 
@@ -105,10 +105,7 @@ class Number(DataType):
         except (InvalidOperation, ValueError):
             pass
 
-        raise CastError('Can not parse value "%s" as Decimal.' % d)
+        raise CastError(f'Can not parse value "{d}" as Decimal.')
 
     def jsonify(self, d):
-        if d is None:
-            return d
-
-        return float(d)
+        return d if d is None else float(d)

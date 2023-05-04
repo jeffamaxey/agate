@@ -79,7 +79,7 @@ class DateTime(DataType):
             if d.lower() in self.null_values:
                 return None
         else:
-            raise CastError('Can not parse value "%s" as datetime.' % d)
+            raise CastError(f'Can not parse value "{d}" as datetime.')
 
         if self.datetime_format:
             orig_locale = None
@@ -90,7 +90,7 @@ class DateTime(DataType):
             try:
                 dt = datetime.datetime.strptime(d, self.datetime_format)
             except (ValueError, TypeError):
-                raise CastError('Value "%s" does not match date format.' % d)
+                raise CastError(f'Value "{d}" does not match date format.')
             finally:
                 if orig_locale:
                     locale.setlocale(locale.LC_TIME, orig_locale)
@@ -108,10 +108,11 @@ class DateTime(DataType):
                 tzinfo=self.timezone
             )
 
-            if matched_text == d and ctx.hasDate and ctx.hasTime:
-                return value
-            elif matched_text == d and ctx.hasDate and not ctx.hasTime:
-                return datetime.datetime.combine(value.date(), datetime.time.min)
+            if matched_text == d and ctx.hasDate:
+                if ctx.hasTime:
+                    return value
+                else:
+                    return datetime.datetime.combine(value.date(), datetime.time.min)
 
         try:
             dt = isodate.parse_datetime(d)
@@ -120,13 +121,10 @@ class DateTime(DataType):
         except Exception:
             pass
 
-        raise CastError('Can not parse value "%s" as datetime.' % d)
+        raise CastError(f'Can not parse value "{d}" as datetime.')
 
     def csvify(self, d):
-        if d is None:
-            return None
-
-        return d.isoformat()
+        return None if d is None else d.isoformat()
 
     def jsonify(self, d):
         return self.csvify(d)

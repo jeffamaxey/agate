@@ -43,7 +43,7 @@ class TestPrintBars(AgateTestCase):
         table.print_bars('three', 'one', width=40, output=output)
         lines = output.getvalue().split('\n')
 
-        self.assertEqual(max([len(line) for line in lines]), 40)
+        self.assertEqual(max(len(line) for line in lines), 40)
 
     def test_print_bars_width_overlap(self):
         table = Table(self.rows, self.column_names, self.column_types)
@@ -52,7 +52,7 @@ class TestPrintBars(AgateTestCase):
         table.print_bars('three', 'one', width=20, output=output)
         lines = output.getvalue().split('\n')
 
-        self.assertEqual(max([len(line) for line in lines]), 20)
+        self.assertEqual(max(len(line) for line in lines), 20)
 
     def test_print_bars_domain(self):
         table = Table(self.rows, self.column_names, self.column_types)

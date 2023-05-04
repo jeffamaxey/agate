@@ -30,7 +30,7 @@ class TimeDelta(DataType):
             if d.lower() in self.null_values:
                 return None
         else:
-            raise CastError('Can not parse value "%s" as timedelta.' % d)
+            raise CastError(f'Can not parse value "{d}" as timedelta.')
 
         try:
             seconds = pytimeparse.parse(d)
@@ -38,6 +38,6 @@ class TimeDelta(DataType):
             seconds = None
 
         if seconds is None:
-            raise CastError('Can not parse value "%s" to as timedelta.' % d)
+            raise CastError(f'Can not parse value "{d}" to as timedelta.')
 
         return datetime.timedelta(seconds=seconds)

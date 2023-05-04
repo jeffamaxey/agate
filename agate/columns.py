@@ -20,10 +20,7 @@ def null_handler(k):
     """
     Key method for sorting nulls correctly.
     """
-    if k is None:
-        return NullOrder()
-
-    return k
+    return NullOrder() if k is None else k
 
 
 class Column(MappedSequence):

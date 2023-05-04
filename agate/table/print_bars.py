@@ -89,8 +89,12 @@ def print_bars(self, label_column_name='group', value_column_name='Count', domai
                 locale=locale
             ))
 
-    max_label_width = max(max([len(label) for label in formatted_labels]), len(y_label))
-    max_value_width = max(max([len(value) for value in formatted_values]), len(x_label))
+    max_label_width = max(
+        max(len(label) for label in formatted_labels), len(y_label)
+    )
+    max_value_width = max(
+        max(len(value) for value in formatted_values), len(x_label)
+    )
 
     plot_width = width - (max_label_width + max_value_width + 2)
 
@@ -183,7 +187,7 @@ def print_bars(self, label_column_name='group', value_column_name='Count', domai
         output.write(line + '\n')
 
     # Chart top
-    top_line = u'%s %s' % (y_label.ljust(max_label_width), x_label.rjust(max_value_width))
+    top_line = f'{y_label.ljust(max_label_width)} {x_label.rjust(max_value_width)}'
     write(top_line)
 
     # Bars
@@ -205,10 +209,7 @@ def print_bars(self, label_column_name='group', value_column_name='Count', domai
             gap = (u' ' * plot_negative_width)
 
             # All positive
-            if x_min <= 0:
-                bar = gap + zero_mark + bar
-            else:
-                bar = bar + gap + zero_mark
+            bar = gap + zero_mark + bar if x_min <= 0 else bar + gap + zero_mark
         else:
             bar = u' ' * (plot_negative_width - bar_width) + bar
 
@@ -218,7 +219,7 @@ def print_bars(self, label_column_name='group', value_column_name='Count', domai
 
         bar = bar.ljust(plot_width)
 
-        write('%s %s %s' % (label_text, value_text, bar))
+        write(f'{label_text} {value_text} {bar}')
 
     # Axis & ticks
     axis = horizontal_line * plot_width
@@ -237,9 +238,10 @@ def print_bars(self, label_column_name='group', value_column_name='Count', domai
         pos = (width - plot_width) + tick + offset
 
         # Don't print intermediate ticks that would overlap
-        if tick != 0 and tick != plot_width - 1:
-            if tick_text[pos - 1:pos + len(label) + 1] != ' ' * (len(label) + 2):
-                continue
+        if tick not in [0, plot_width - 1] and tick_text[
+            pos - 1 : pos + len(label) + 1
+        ] != ' ' * (len(label) + 2):
+            continue
 
         tick_text = tick_text[:pos] + label + tick_text[pos + len(label):]
         axis = axis[:tick] + tick_mark + axis[tick + 1:]

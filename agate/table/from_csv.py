@@ -52,20 +52,15 @@ def from_csv(cls, path, column_names=None, column_types=None, row_names=None, sk
         if hasattr(path, 'read'):
             f = path
         else:
-            if six.PY2:
-                f = open(path, 'Urb')
-            else:
-                f = io.open(path, encoding=encoding)
-
+            f = open(path, 'Urb') if six.PY2 else io.open(path, encoding=encoding)
             close = True
 
-        if isinstance(skip_lines, int):
-            while skip_lines > 0:
-                f.readline()
-                skip_lines -= 1
-        else:
+        if not isinstance(skip_lines, int):
             raise ValueError('skip_lines argument must be an int')
 
+        while skip_lines > 0:
+            f.readline()
+            skip_lines -= 1
         contents = six.StringIO(f.read())
 
         if sniff_limit is None:

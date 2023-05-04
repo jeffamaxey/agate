@@ -48,22 +48,35 @@ def from_json(cls, path, row_names=None, key=None, newline=False, column_types=N
             js = []
 
             if hasattr(path, 'read'):
-                for line in path:
-                    js.append(json.loads(line, object_pairs_hook=OrderedDict, parse_float=Decimal, **kwargs))
+                js.extend(
+                    json.loads(
+                        line,
+                        object_pairs_hook=OrderedDict,
+                        parse_float=Decimal,
+                        **kwargs
+                    )
+                    for line in path
+                )
             else:
                 f = io.open(path, encoding=encoding)
                 close = True
 
-                for line in f:
-                    js.append(json.loads(line, object_pairs_hook=OrderedDict, parse_float=Decimal, **kwargs))
+                js.extend(
+                    json.loads(
+                        line,
+                        object_pairs_hook=OrderedDict,
+                        parse_float=Decimal,
+                        **kwargs
+                    )
+                    for line in f
+                )
+        elif hasattr(path, 'read'):
+            js = json.load(path, object_pairs_hook=OrderedDict, parse_float=Decimal, **kwargs)
         else:
-            if hasattr(path, 'read'):
-                js = json.load(path, object_pairs_hook=OrderedDict, parse_float=Decimal, **kwargs)
-            else:
-                f = io.open(path, encoding=encoding)
-                close = True
+            f = io.open(path, encoding=encoding)
+            close = True
 
-                js = json.load(f, object_pairs_hook=OrderedDict, parse_float=Decimal, **kwargs)
+            js = json.load(f, object_pairs_hook=OrderedDict, parse_float=Decimal, **kwargs)
 
         if isinstance(js, dict):
             if not key:

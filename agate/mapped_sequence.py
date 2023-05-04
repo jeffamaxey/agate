@@ -38,10 +38,7 @@ class MappedSequence(Sequence):
     def __init__(self, values, keys=None):
         self._values = tuple(values)
 
-        if keys is not None:
-            self._keys = keys
-        else:
-            self._keys = None
+        self._keys = keys if keys is not None else None
 
     def __getstate__(self):
         """
@@ -70,9 +67,9 @@ class MappedSequence(Sequence):
         sample = u', '.join(repr(d) for d in self.values()[:5])
 
         if len(self) > 5:
-            sample = u'%s, ...' % sample
+            sample = f'{sample}, ...'
 
-        return u'<agate.%s: (%s)>' % (type(self).__name__, sample)
+        return f'<agate.{type(self).__name__}: ({sample})>'
 
     def __str__(self):
         """
@@ -121,10 +118,7 @@ class MappedSequence(Sequence):
         """
         Equality test with other sequences.
         """
-        if not isinstance(other, Sequence):
-            return False
-
-        return self.values() == tuple(other)
+        return self.values() == tuple(other) if isinstance(other, Sequence) else False
 
     def __ne__(self, other):
         """
@@ -161,10 +155,7 @@ class MappedSequence(Sequence):
         try:
             return self.dict()[key]
         except KeyError:
-            if default:
-                return default
-            else:
-                return None
+            return default if default else None
 
     @memoize
     def dict(self):

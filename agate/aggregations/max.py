@@ -33,6 +33,5 @@ class Max(Aggregation):
     def run(self, table):
         column = table.columns[self._column_name]
 
-        data = column.values_without_nulls()
-        if data:
+        if data := column.values_without_nulls():
             return max(data)

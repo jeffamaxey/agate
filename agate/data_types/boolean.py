@@ -48,10 +48,10 @@ class Boolean(DataType):
         elif type(d) is bool and type(d) is not int:
             return d
         elif type(d) is int or isinstance(d, Decimal):
-            if d == 1:
-                return True
-            elif d == 0:
+            if d == 0:
                 return False
+            elif d == 1:
+                return True
         elif isinstance(d, six.string_types):
             d = d.replace(',', '').strip()
 
@@ -64,7 +64,7 @@ class Boolean(DataType):
             elif d_lower in self.false_values:
                 return False
 
-        raise CastError('Can not convert value %s to bool.' % d)
+        raise CastError(f'Can not convert value {d} to bool.')
 
     def jsonify(self, d):
         return d

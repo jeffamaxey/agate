@@ -19,16 +19,8 @@ def limit(self, start_or_stop=None, stop=None, step=None):
     :returns:
         A new :class:`.Table`.
     """
-    if stop or step:
-        s = slice(start_or_stop, stop, step)
-    else:
-        s = slice(start_or_stop)
-
+    s = slice(start_or_stop, stop, step) if stop or step else slice(start_or_stop)
     rows = self._rows[s]
 
-    if self._row_names is not None:
-        row_names = self._row_names[s]
-    else:
-        row_names = None
-
+    row_names = self._row_names[s] if self._row_names is not None else None
     return self._fork(rows, row_names=row_names)

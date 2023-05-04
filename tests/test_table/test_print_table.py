@@ -84,13 +84,13 @@ class TestPrintTable(AgateTestCase):
         self.assertIn(u' 11.123456 ', lines[3])
         self.assertIn(u' 0 ', lines[4])
         # Test real precision above max
-        self.assertIn(u' 1' + get_decimal_symbol() + u'74… ', lines[2])
-        self.assertIn(u' 11' + get_decimal_symbol() + u'12… ', lines[3])
-        self.assertIn(u' 0' + get_decimal_symbol() + u'00… ', lines[4])
+        self.assertIn(f' 1{get_decimal_symbol()}74… ', lines[2])
+        self.assertIn(f' 11{get_decimal_symbol()}12… ', lines[3])
+        self.assertIn(f' 0{get_decimal_symbol()}00… ', lines[4])
         # Test real precision below max
-        self.assertIn(u' 1' + get_decimal_symbol() + u'72 ', lines[2])
-        self.assertIn(u' 5' + get_decimal_symbol() + u'10 ', lines[3])
-        self.assertIn(u' 0' + get_decimal_symbol() + u'10 ', lines[4])
+        self.assertIn(f' 1{get_decimal_symbol()}72 ', lines[2])
+        self.assertIn(f' 5{get_decimal_symbol()}10 ', lines[3])
+        self.assertIn(f' 0{get_decimal_symbol()}10 ', lines[4])
 
     def test_print_table_max_column_width(self):
         rows = (

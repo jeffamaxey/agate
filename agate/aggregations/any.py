@@ -18,10 +18,7 @@ class Any(Aggregation):
     def __init__(self, column_name, test):
         self._column_name = column_name
 
-        if callable(test):
-            self._test = test
-        else:
-            self._test = lambda d: d == test
+        self._test = test if callable(test) else (lambda d: d == test)
 
     def get_aggregate_data_type(self, table):
         return Boolean()

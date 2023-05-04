@@ -42,8 +42,8 @@ def bins(self, column_name, count=10, start=None, end=None):
         Max(column_name).run(self)
     )
     # Infer bin start/end positions
-    start = minimum if not start else Decimal(start)
-    end = maximum if not end else Decimal(end)
+    start = Decimal(start) if start else minimum
+    end = Decimal(end) if end else maximum
 
     # Calculate bin size
     spread = abs(end - start)
@@ -66,7 +66,7 @@ def bins(self, column_name, count=10, start=None, end=None):
         exclusive = format_decimal(j, format=break_formatter)
 
         output = u'[' if first_exclusive else u'('
-        output += u'%s - %s' % (inclusive, exclusive)
+        output += f'{inclusive} - {exclusive}'
         output += u']' if last_exclusive else u')'
 
         return output

@@ -30,15 +30,12 @@ class MAD(Aggregation):
         if not isinstance(column.data_type, Number):
             raise DataTypeError('MAD can only be applied to columns containing Number data.')
 
-        has_nulls = HasNulls(self._column_name).run(table)
-
-        if has_nulls:
+        if has_nulls := HasNulls(self._column_name).run(table):
             warn_null_calculation(self, column)
 
     def run(self, table):
         column = table.columns[self._column_name]
 
-        data = column.values_without_nulls_sorted()
-        if data:
+        if data := column.values_without_nulls_sorted():
             m = self._median.run(table)
             return median(tuple(abs(n - m) for n in data))

@@ -29,7 +29,7 @@ def to_json(self, path, nested=False, indent=None, **kwargs):
             os.makedirs(path)
 
         for name, table in self.items():
-            filepath = os.path.join(path, '%s.json' % name)
+            filepath = os.path.join(path, f'{name}.json')
 
             table.to_json(filepath, indent=indent, **kwargs)
     else:
@@ -57,7 +57,7 @@ def to_json(self, path, nested=False, indent=None, **kwargs):
         if six.PY2:
             json_kwargs['encoding'] = 'utf-8'
 
-        json_kwargs.update(kwargs)
+        json_kwargs |= kwargs
         json.dump(tableset_dict, f, **json_kwargs)
 
         if close and f is not None:

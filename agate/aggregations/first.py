@@ -28,7 +28,7 @@ class First(Aggregation):
         column = table.columns[self._column_name]
         data = column.values()
 
-        if self._test is not None and len([d for d in data if self._test(d)]) == 0:
+        if self._test is not None and not [d for d in data if self._test(d)]:
             raise ValueError('No values pass the given test.')
 
     def run(self, table):

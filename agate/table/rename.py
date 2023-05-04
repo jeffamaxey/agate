@@ -52,10 +52,9 @@ def rename(self, column_names=None, row_names=None, slug_columns=False, slug_row
         if row_names is not None:
             row_names = utils.slugify(row_names, ensure_unique=True, **kwargs)
 
-    if column_names is not None and column_names != self._column_names:
-        if row_names is None:
-            row_names = self._row_names
-
-        return Table(self._rows, column_names, self._column_types, row_names=row_names, _is_fork=False)
-    else:
+    if column_names is None or column_names == self._column_names:
         return self._fork(self._rows, column_names, self._column_types, row_names=row_names)
+    if row_names is None:
+        row_names = self._row_names
+
+    return Table(self._rows, column_names, self._column_types, row_names=row_names, _is_fork=False)

@@ -58,7 +58,7 @@ def print_table(self, max_rows=20, max_columns=6, output=sys.stdout, max_column_
     column_names = []
     for column_name in self.column_names[:max_columns]:
         if max_column_width is not None and len(column_name) > max_column_width:
-            column_names.append('%s...' % column_name[:max_column_width - 3])
+            column_names.append(f'{column_name[:max_column_width - 3]}...')
         else:
             column_names.append(column_name)
 
@@ -106,7 +106,7 @@ def print_table(self, max_rows=20, max_columns=6, output=sys.stdout, max_column_
                 v = six.text_type(v)
 
             if max_column_width is not None and len(v) > max_column_width:
-                v = '%s...' % v[:max_column_width - 3]
+                v = f'{v[:max_column_width - 3]}...'
 
             if len(v) > widths[j]:
                 widths[j] = len(v)
@@ -130,15 +130,15 @@ def print_table(self, max_rows=20, max_columns=6, output=sys.stdout, max_column_
         for j, d in enumerate(formatted_row):
             # Text is left-justified, all other values are right-justified
             if isinstance(self._column_types[j], Text):
-                output = ' %s ' % d.ljust(widths[j])
+                output = f' {d.ljust(widths[j])} '
             else:
-                output = ' %s ' % d.rjust(widths[j])
+                output = f' {d.rjust(widths[j])} '
 
             row_output.append(output)
 
         text = v_line.join(row_output)
 
-        write('%s%s%s' % (v_line, text, v_line))
+        write(f'{v_line}{text}{v_line}')
 
     divider = '%(v_line)s %(columns)s %(v_line)s' % {
         'v_line': v_line,

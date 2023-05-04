@@ -34,8 +34,7 @@ class Reader(six.Iterator):
         if header != ['column', 'start', 'length']:
             raise ValueError('Schema must contain exactly three columns: "column", "start", and "length".')
 
-        for row in reader:
-            self.fields.append(Field(row[0], int(row[1]), int(row[2])))
+        self.fields.extend(Field(row[0], int(row[1]), int(row[2])) for row in reader)
 
     def __iter__(self):
         return self
@@ -43,12 +42,10 @@ class Reader(six.Iterator):
     def __next__(self):
         line = next(self.file)
 
-        values = []
-
-        for field in self.fields:
-            values.append(line[field.start:field.start + field.length].strip())
-
-        return values
+        return [
+            line[field.start : field.start + field.length].strip()
+            for field in self.fields
+        ]
 
     @property
     def fieldnames(self):

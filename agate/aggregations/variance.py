@@ -30,16 +30,13 @@ class Variance(Aggregation):
         if not isinstance(column.data_type, Number):
             raise DataTypeError('Variance can only be applied to columns containing Number data.')
 
-        has_nulls = HasNulls(self._column_name).run(table)
-
-        if has_nulls:
+        if has_nulls := HasNulls(self._column_name).run(table):
             warn_null_calculation(self, column)
 
     def run(self, table):
         column = table.columns[self._column_name]
 
-        data = column.values_without_nulls()
-        if data:
+        if data := column.values_without_nulls():
             mean = self._mean.run(table)
             return sum((n - mean) ** 2 for n in data) / (len(data) - 1)
 
@@ -66,15 +63,12 @@ class PopulationVariance(Variance):
         if not isinstance(column.data_type, Number):
             raise DataTypeError('PopulationVariance can only be applied to columns containing Number data.')
 
-        has_nulls = HasNulls(self._column_name).run(table)
-
-        if has_nulls:
+        if has_nulls := HasNulls(self._column_name).run(table):
             warn_null_calculation(self, column)
 
     def run(self, table):
         column = table.columns[self._column_name]
 
-        data = column.values_without_nulls()
-        if data:
+        if data := column.values_without_nulls():
             mean = self._mean.run(table)
             return sum((n - mean) ** 2 for n in data) / len(data)

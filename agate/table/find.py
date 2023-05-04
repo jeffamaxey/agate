@@ -14,8 +14,4 @@ def find(self, test):
     :returns:
         A single :class:`.Row` if found, or `None`.
     """
-    for row in self._rows:
-        if test(row):
-            return row
-
-    return None
+    return next((row for row in self._rows if test(row)), None)

@@ -42,16 +42,10 @@ class DataType(object):  # pragma: no cover
         """
         Format a given native value for CSV serialization.
         """
-        if d is None:
-            return None
-
-        return six.text_type(d)
+        return None if d is None else six.text_type(d)
 
     def jsonify(self, d):
         """
         Format a given native value for JSON serialization.
         """
-        if d is None:
-            return None
-
-        return six.text_type(d)
+        return None if d is None else six.text_type(d)

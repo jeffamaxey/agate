@@ -31,8 +31,5 @@ class Sum(Aggregation):
     def run(self, table):
         column = table.columns[self._column_name]
 
-        start = 0
-        if isinstance(column.data_type, TimeDelta):
-            start = datetime.timedelta()
-
+        start = datetime.timedelta() if isinstance(column.data_type, TimeDelta) else 0
         return sum(column.values_without_nulls(), start)

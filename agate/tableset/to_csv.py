@@ -17,6 +17,6 @@ def to_csv(self, dir_path, **kwargs):
         os.makedirs(dir_path)
 
     for name, table in self.items():
-        path = os.path.join(dir_path, '%s.csv' % name)
+        path = os.path.join(dir_path, f'{name}.csv')
 
         table.to_csv(path, **kwargs)

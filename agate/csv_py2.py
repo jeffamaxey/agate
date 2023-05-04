@@ -145,7 +145,7 @@ class UnicodeDictWriter(csv.DictWriter):
         self.restval = restval
 
         if extrasaction.lower() not in ('raise', 'ignore'):
-            raise ValueError('extrasaction (%s) must be "raise" or "ignore"' % extrasaction)
+            raise ValueError(f'extrasaction ({extrasaction}) must be "raise" or "ignore"')
 
         self.extrasaction = extrasaction
 
@@ -216,11 +216,7 @@ class DictWriter(UnicodeDictWriter):
         UnicodeDictWriter.__init__(self, f, fieldnames, encoding=encoding, **kwargs)
 
     def _append_line_number(self, row):
-        if self.row_count == 0:
-            row['line_number'] = 0
-        else:
-            row['line_number'] = self.row_count
-
+        row['line_number'] = 0 if self.row_count == 0 else self.row_count
         self.row_count += 1
 
     def writerow(self, row):
@@ -252,7 +248,7 @@ class Sniffer(object):
         try:
             dialect = csv.Sniffer().sniff(sample, POSSIBLE_DELIMITERS)
         except csv.Error as e:
-            warnings.warn('Error sniffing CSV dialect: %s' % e, RuntimeWarning, stacklevel=2)
+            warnings.warn(f'Error sniffing CSV dialect: {e}', RuntimeWarning, stacklevel=2)
             dialect = None
 
         return dialect

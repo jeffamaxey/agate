@@ -49,9 +49,10 @@ def homogenize(self, key, compare_values, default_row=None):
     if not utils.issequence(key):
         key = [key]
 
-    if len(key) == 1:
-        if any(not utils.issequence(compare_value) for compare_value in compare_values):
-            compare_values = [[compare_value] for compare_value in compare_values]
+    if len(key) == 1 and any(
+        not utils.issequence(compare_value) for compare_value in compare_values
+    ):
+        compare_values = [[compare_value] for compare_value in compare_values]
 
     column_values = [self._columns.get(name) for name in key]
     column_indexes = [self._column_names.index(name) for name in key]

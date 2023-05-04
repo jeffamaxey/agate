@@ -20,8 +20,10 @@ def print_structure(self, max_rows=20, output=sys.stdout):
     """
     max_length = min(len(self.items()), max_rows)
 
-    name_column = self.keys()[0:max_length]
-    type_column = [str(len(table.rows)) for key, table in self.items()[0:max_length]]
+    name_column = self.keys()[:max_length]
+    type_column = [
+        str(len(table.rows)) for key, table in self.items()[:max_length]
+    ]
     rows = zip(name_column, type_column)
     column_names = ['table', 'rows']
     text = Text()

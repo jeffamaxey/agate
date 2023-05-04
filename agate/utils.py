@@ -42,10 +42,7 @@ def memoize(func):
 
     @wraps(func)
     def wrapper(self):
-        if memo is not None:
-            return memo
-
-        return func(self)
+        return memo if memo is not None else func(self)
 
     return wrapper
 
@@ -60,10 +57,7 @@ class NullOrder(object):
         return False
 
     def __gt__(self, other):
-        if other is None:
-            return False
-
-        return True
+        return other is not None
 
 
 class Quantiles(Sequence):
@@ -279,17 +273,17 @@ def deduplicate(values, column_names=False, separator='_'):
     final_values = []
 
     for i, value in enumerate(values):
-        if column_names:
-            if not value:
-                new_value = letter_name(i)
-                warn_unnamed_column(i, new_value)
-            elif isinstance(value, six.string_types):
-                new_value = value
-            else:
-                raise ValueError('Column names must be strings or None.')
-        else:
+        if column_names and not value:
+            new_value = letter_name(i)
+            warn_unnamed_column(i, new_value)
+        elif (
+            column_names
+            and isinstance(value, six.string_types)
+            or not column_names
+        ):
             new_value = value
-
+        else:
+            raise ValueError('Column names must be strings or None.')
         final_value = new_value
         duplicates = 0
 
@@ -317,11 +311,8 @@ def slugify(values, ensure_unique=False, **kwargs):
     Any kwargs will be passed to the slugify method in python-slugify. See:
     https://github.com/un33k/python-slugify
     """
-    slug_args = {'separator': '_'}
-    slug_args.update(kwargs)
-
-    if ensure_unique:
-        new_values = tuple(pslugify(value, **slug_args) for value in values)
-        return deduplicate(new_values, separator=slug_args['separator'])
-    else:
+    slug_args = {'separator': '_'} | kwargs
+    if not ensure_unique:
         return tuple(pslugify(value, **slug_args) for value in values)
+    new_values = tuple(pslugify(value, **slug_args) for value in values)
+    return deduplicate(new_values, separator=slug_args['separator'])

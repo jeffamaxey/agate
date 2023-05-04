@@ -34,9 +34,7 @@ class Quintiles(Aggregation):
         if not isinstance(column.data_type, Number):
             raise DataTypeError('Quintiles can only be applied to columns containing Number data.')
 
-        has_nulls = HasNulls(self._column_name).run(table)
-
-        if has_nulls:
+        if has_nulls := HasNulls(self._column_name).run(table):
             warn_null_calculation(self, column)
 
     def run(self, table):

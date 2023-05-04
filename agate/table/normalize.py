@@ -79,15 +79,15 @@ def normalize(self, key, properties, property_column='property', value_column='v
         else:
             row_names.append(k)
 
-        for f in properties:
-            new_rows.append(Row((left_row + [f, row[f]]), new_column_names))
-
+        new_rows.extend(
+            Row((left_row + [f, row[f]]), new_column_names) for f in properties
+        )
     key_column_types = [self._column_types[self._column_names.index(name)] for name in key]
 
     if column_types is None or isinstance(column_types, TypeTester):
         tester = TypeTester() if column_types is None else column_types
         force_update = dict(zip(key, key_column_types))
-        force_update.update(tester._force)
+        force_update |= tester._force
         tester._force = force_update
 
         new_column_types = tester.run(new_rows, new_column_names)

@@ -48,11 +48,7 @@ class TestBins(AgateTestCase):
         ])
 
     def test_bins_negative(self):
-        rows = []
-
-        for i in range(0, -100, -1):
-            rows.append([i])
-
+        rows = [[i] for i in range(0, -100, -1)]
         new_table = Table(rows, self.column_names, self.column_types).bins('number', 10, start=-100)
 
         self.assertColumnNames(new_table, ['number', 'Count'])
@@ -63,11 +59,7 @@ class TestBins(AgateTestCase):
         self.assertSequenceEqual(new_table.rows[9], ['[-10 - 0]', 11])
 
     def test_bins_mixed_signs(self):
-        rows = []
-
-        for i in range(0, -100, -1):
-            rows.append([i + 50])
-
+        rows = [[i + 50] for i in range(0, -100, -1)]
         new_table = Table(rows, self.column_names, self.column_types).bins('number')
 
         self.assertColumnNames(new_table, ['number', 'Count'])
@@ -78,11 +70,7 @@ class TestBins(AgateTestCase):
         self.assertSequenceEqual(new_table.rows[9], ['[40 - 50]', 11])
 
     def test_bins_small_numbers(self):
-        rows = []
-
-        for i in range(0, 100):
-            rows.append([Decimal(i) / Decimal('10')])
-
+        rows = [[Decimal(i) / Decimal('10')] for i in range(0, 100)]
         new_table = Table(rows, self.column_names, self.column_types).bins('number')
 
         self.assertSequenceEqual(new_table.rows[0], ['[0 - 1)', 10])
@@ -90,11 +78,7 @@ class TestBins(AgateTestCase):
         self.assertSequenceEqual(new_table.rows[9], ['[9 - 10]', 10])
 
     def test_bins_values_outside_start_end(self):
-        rows = []
-
-        for i in range(0, 100):
-            rows.append([Decimal(i) / Decimal('10')])
-
+        rows = [[Decimal(i) / Decimal('10')] for i in range(0, 100)]
         table_one = Table(rows, self.column_names, self.column_types).bins('number', start=1, end=11)
         table_two = Table(rows, self.column_names, self.column_types).bins('number', start=-1, end=9)
 
@@ -102,11 +86,7 @@ class TestBins(AgateTestCase):
         self.assertSequenceEqual(table_two.rows[8], ['[8 - 10]', 20])
 
     def test_bins_decimals(self):
-        rows = []
-
-        for i in range(0, 100):
-            rows.append([Decimal(i) / Decimal('100')])
-
+        rows = [[Decimal(i) / Decimal('100')] for i in range(0, 100)]
         new_table = Table(rows, self.column_names, self.column_types).bins('number')
 
         self.assertColumnNames(new_table, ['number', 'Count'])
@@ -114,23 +94,19 @@ class TestBins(AgateTestCase):
 
         self.assertSequenceEqual(
             new_table.rows[0],
-            [u'[0' + get_decimal_symbol() + u'0 - 0' + get_decimal_symbol() + u'1)', 10]
+            [f'[0{get_decimal_symbol()}0 - 0{get_decimal_symbol()}1)', 10],
         )
         self.assertSequenceEqual(
             new_table.rows[3],
-            [u'[0' + get_decimal_symbol() + u'3 - 0' + get_decimal_symbol() + u'4)', 10]
+            [f'[0{get_decimal_symbol()}3 - 0{get_decimal_symbol()}4)', 10],
         )
         self.assertSequenceEqual(
             new_table.rows[9],
-            [u'[0' + get_decimal_symbol() + u'9 - 1' + get_decimal_symbol() + u'0]', 10]
+            [f'[0{get_decimal_symbol()}9 - 1{get_decimal_symbol()}0]', 10],
         )
 
     def test_bins_nulls(self):
-        rows = []
-
-        for i in range(0, 100):
-            rows.append([Decimal(i) / Decimal('100')])
-
+        rows = [[Decimal(i) / Decimal('100')] for i in range(0, 100)]
         rows.append([None])
 
         new_table = Table(rows, self.column_names, self.column_types).bins('number')
@@ -140,14 +116,14 @@ class TestBins(AgateTestCase):
 
         self.assertSequenceEqual(
             new_table.rows[0],
-            [u'[0' + get_decimal_symbol() + u'0 - 0' + get_decimal_symbol() + u'1)', 10]
+            [f'[0{get_decimal_symbol()}0 - 0{get_decimal_symbol()}1)', 10],
         )
         self.assertSequenceEqual(
             new_table.rows[3],
-            [u'[0' + get_decimal_symbol() + u'3 - 0' + get_decimal_symbol() + u'4)', 10]
+            [f'[0{get_decimal_symbol()}3 - 0{get_decimal_symbol()}4)', 10],
         )
         self.assertSequenceEqual(
             new_table.rows[9],
-            [u'[0' + get_decimal_symbol() + u'9 - 1' + get_decimal_symbol() + u'0]', 10]
+            [f'[0{get_decimal_symbol()}9 - 1{get_decimal_symbol()}0]', 10],
         )
         self.assertSequenceEqual(new_table.rows[10], [None, 1])

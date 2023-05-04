@@ -81,17 +81,15 @@ def to_json(self, path, key=None, newline=False, indent=None, **kwargs):
                     k = str(row[key]) if six.PY3 else unicode(row[key])  # noqa: F821
 
                 if k in output:
-                    raise ValueError('Value %s is not unique in the key column.' % six.text_type(k))
+                    raise ValueError(f'Value {six.text_type(k)} is not unique in the key column.')
 
                 values = tuple(json_funcs[i](d) for i, d in enumerate(row))
                 output[k] = OrderedDict(zip(row.keys(), values))
             dump_json(output)
-        # Newline-delimited
         elif newline:
             for row in self._rows:
                 values = tuple(json_funcs[i](d) for i, d in enumerate(row))
                 dump_json(OrderedDict(zip(row.keys(), values)))
-        # Normal
         else:
             output = []
 

@@ -28,9 +28,4 @@ class PercentileRank(Rank):
         """
         percentiles = Percentiles(self._column_name).run(table)
 
-        new_column = []
-
-        for row in table.rows:
-            new_column.append(percentiles.locate(row[self._column_name]))
-
-        return new_column
+        return [percentiles.locate(row[self._column_name]) for row in table.rows]

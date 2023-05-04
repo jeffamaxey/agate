@@ -97,7 +97,7 @@ def print_html(self, max_rows=20, max_columns=6, output=sys.stdout, max_column_w
                 v = six.text_type(v)
 
             if max_column_width is not None and len(v) > max_column_width:
-                v = '%s...' % v[:max_column_width - 3]
+                v = f'{v[:max_column_width - 3]}...'
 
             formatted_row.append(v)
 
@@ -118,9 +118,9 @@ def print_html(self, max_rows=20, max_columns=6, output=sys.stdout, max_column_w
         for j, d in enumerate(formatted_row):
             # Text is left-justified, all other values are right-justified
             if isinstance(self._column_types[j], Text):
-                write('<td style="text-align: left;">%s</td>' % d)
+                write(f'<td style="text-align: left;">{d}</td>')
             else:
-                write('<td style="text-align: right;">%s</td>' % d)
+                write(f'<td style="text-align: right;">{d}</td>')
 
         write('</tr>')
 
@@ -130,7 +130,7 @@ def print_html(self, max_rows=20, max_columns=6, output=sys.stdout, max_column_w
     write('<tr>')
 
     for i, col in enumerate(column_names):
-        write('<th>%s</th>' % col)
+        write(f'<th>{col}</th>')
 
     write('</tr>')
     write('</thead>')

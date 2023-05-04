@@ -85,8 +85,11 @@ class Table(object):
             self._column_names = utils.deduplicate(column_names, column_names=True)
         elif rows:
             self._column_names = tuple(utils.letter_name(i) for i in range(len(rows[0])))
-            warnings.warn('Column names not specified. "%s" will be used as names.' % str(self._column_names),
-                          RuntimeWarning, stacklevel=2)
+            warnings.warn(
+                f'Column names not specified. "{self._column_names}" will be used as names.',
+                RuntimeWarning,
+                stacklevel=2,
+            )
         else:
             self._column_names = tuple()
 
@@ -133,7 +136,7 @@ class Table(object):
                     try:
                         row_values.append(cast_funcs[j](d))
                     except CastError as e:
-                        raise CastError(str(e) + ' Error at row %s column %s.' % (i, self._column_names[j]))
+                        raise CastError(f'{str(e)} Error at row {i} column {self._column_names[j]}.')
 
                 new_rows.append(Row(row_values, self._column_names))
         else:

@@ -57,11 +57,7 @@ def merge(cls, tables, row_names=None, column_names=None):
             rows.extend(table.rows)
         else:
             for row in table.rows:
-                data = []
-
-                for column_key in column_keys:
-                    data.append(row.get(column_key, None))
-
+                data = [row.get(column_key, None) for column_key in column_keys]
                 rows.append(Row(data, column_keys))
 
     return Table(rows, column_keys, column_types, row_names=row_names, _is_fork=True)

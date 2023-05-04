@@ -84,14 +84,17 @@ class TypeTester(object):
             The data as a sequence of any sequences: tuples, lists, etc.
         """
         num_columns = len(column_names)
-        hypotheses = [set(self._possible_types) for i in range(num_columns)]
+        hypotheses = [set(self._possible_types) for _ in range(num_columns)]
         force_indices = []
 
         for name in self._force.keys():
             try:
                 force_indices.append(column_names.index(name))
             except ValueError:
-                warnings.warn('"%s" does not match the name of any column in this table.' % name, RuntimeWarning)
+                warnings.warn(
+                    f'"{name}" does not match the name of any column in this table.',
+                    RuntimeWarning,
+                )
 
         if self._limit:
             sample_rows = rows[:self._limit]

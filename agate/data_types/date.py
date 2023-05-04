@@ -70,7 +70,7 @@ class Date(DataType):
             if d.lower() in self.null_values:
                 return None
         else:
-            raise CastError('Can not parse value "%s" as date.' % d)
+            raise CastError(f'Can not parse value "{d}" as date.')
 
         if self.date_format:
             orig_locale = None
@@ -81,7 +81,7 @@ class Date(DataType):
             try:
                 dt = datetime.strptime(d, self.date_format)
             except (ValueError, TypeError):
-                raise CastError('Value "%s" does not match date format.' % d)
+                raise CastError(f'Value "{d}" does not match date format.')
             finally:
                 if orig_locale:
                     locale.setlocale(locale.LC_TIME, orig_locale)
@@ -91,18 +91,15 @@ class Date(DataType):
         try:
             (value, ctx, _, _, matched_text), = self._parser.nlp(d, sourceTime=ZERO_DT)
         except (TypeError, ValueError, OverflowError):
-            raise CastError('Value "%s" does not match date format.' % d)
+            raise CastError(f'Value "{d}" does not match date format.')
         else:
             if matched_text == d and ctx.hasDate and not ctx.hasTime:
                 return value.date()
 
-        raise CastError('Can not parse value "%s" as date.' % d)
+        raise CastError(f'Can not parse value "{d}" as date.')
 
     def csvify(self, d):
-        if d is None:
-            return None
-
-        return d.isoformat()
+        return None if d is None else d.isoformat()
 
     def jsonify(self, d):
         return self.csvify(d)

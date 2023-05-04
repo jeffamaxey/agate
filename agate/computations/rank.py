@@ -55,19 +55,8 @@ class Rank(Computation):
             data_sorted.reverse()
 
         ranks = {}
-        rank = 0
+        for rank, c in enumerate(data_sorted, start=1):
+            if c not in ranks:
+                ranks[c] = Decimal(rank)
 
-        for c in data_sorted:
-            rank += 1
-
-            if c in ranks:
-                continue
-
-            ranks[c] = Decimal(rank)
-
-        new_column = []
-
-        for row in table.rows:
-            new_column.append(ranks[row[self._column_name]])
-
-        return new_column
+        return [ranks[row[self._column_name]] for row in table.rows]

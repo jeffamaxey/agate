@@ -23,16 +23,8 @@ def column_chart(self, label=0, value=1, path=None, width=None, height=None):
     :param height:
         The height of the output SVG.
     """
-    if type(label) is int:
-        label_name = self.column_names[label]
-    else:
-        label_name = label
-
-    if type(value) is int:
-        value_name = self.column_names[value]
-    else:
-        value_name = value
-
+    label_name = self.column_names[label] if type(label) is int else label
+    value_name = self.column_names[value] if type(value) is int else value
     chart = leather.Chart()
     chart.add_x_axis(name=label_name)
     chart.add_y_axis(name=value_name)

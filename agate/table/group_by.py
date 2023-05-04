@@ -43,11 +43,7 @@ def group_by(self, key, key_name=None, key_type=None):
     groups = OrderedDict()
 
     for row in self._rows:
-        if key_is_row_function:
-            group_name = key(row)
-        else:
-            group_name = row[column.name]
-
+        group_name = key(row) if key_is_row_function else row[column.name]
         group_name = key_type.cast(group_name)
 
         if group_name not in groups:

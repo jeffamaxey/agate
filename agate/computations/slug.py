@@ -54,7 +54,7 @@ class Slug(Computation):
             if issequence(self._column_name):
                 column_value = ''
                 for column_name in self._column_name:
-                    column_value = column_value + ' ' + row[column_name]
+                    column_value = f'{column_value} {row[column_name]}'
 
                 new_column.append(column_value)
             else:

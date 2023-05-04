@@ -147,11 +147,10 @@ class TableSet(MappedSequence):
         """
         Calls a method on each table in this :class:`.TableSet`.
         """
-        tables = []
-
-        for key, table in self.items():
-            tables.append(getattr(table, method_name)(*args, **kwargs))
-
+        tables = [
+            getattr(table, method_name)(*args, **kwargs)
+            for key, table in self.items()
+        ]
         return self._fork(
             tables,
             self.keys()

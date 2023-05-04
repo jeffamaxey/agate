@@ -137,7 +137,7 @@ def join(self, right_table, left_key=None, right_key=None, inner=False, full_out
                 continue
 
         if name in self.column_names:
-            column_names.append('%s2' % name)
+            column_names.append(f'{name}2')
         else:
             column_names.append(name)
 
@@ -157,43 +157,42 @@ def join(self, right_table, left_key=None, right_key=None, inner=False, full_out
     # Collect new rows
     rows = []
 
-    if self._row_names is not None and not full_outer:
-        row_names = []
-    else:
-        row_names = None
-
+    row_names = [] if self._row_names is not None and not full_outer else None
     # Iterate over left column
     for left_index, left_value in enumerate(left_data):
         matching_rows = right_hash.get(left_value, None)
 
         if require_match and matching_rows is None:
-            raise ValueError('Left key "%s" does not have a matching right key.' % left_value)
+            raise ValueError(
+                f'Left key "{left_value}" does not have a matching right key.'
+            )
 
         # Rows with matches
         if matching_rows:
             for right_row in matching_rows:
                 new_row = list(self._rows[left_index])
 
-                for k, v in enumerate(right_row):
-                    if columns is None and k in right_key_indices and not full_outer:
-                        continue
-
-                    new_row.append(v)
-
+                new_row.extend(
+                    v
+                    for k, v in enumerate(right_row)
+                    if columns is not None
+                    or k not in right_key_indices
+                    or full_outer
+                )
                 rows.append(Row(new_row, column_names))
 
                 if self._row_names is not None and not full_outer:
                     row_names.append(self._row_names[left_index])
-        # Rows without matches
         elif not inner:
             new_row = list(self._rows[left_index])
 
-            for k, v in enumerate(right_table._column_names):
-                if columns is None and k in right_key_indices and not full_outer:
-                    continue
-
-                new_row.append(None)
-
+            new_row.extend(
+                None
+                for k, v in enumerate(right_table._column_names)
+                if columns is not None
+                or k not in right_key_indices
+                or full_outer
+            )
             rows.append(Row(new_row, column_names))
 
             if self._row_names is not None and not full_outer:

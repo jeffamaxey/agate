@@ -26,7 +26,6 @@ def _aggregate(self, aggregations=[]):
         column_names.insert(0, self._key_name)
         column_types.insert(0, self._key_type)
         row_name_columns.insert(0, self._key_name)
-    # Regular Tables
     else:
         column_names = [self._key_name]
         column_types = [self._key_type]
@@ -43,9 +42,10 @@ def _aggregate(self, aggregations=[]):
         for name, table in self.items():
             new_row = [name]
 
-            for new_column_name, aggregation in aggregations:
-                new_row.append(aggregation.run(table))
-
+            new_row.extend(
+                aggregation.run(table)
+                for new_column_name, aggregation in aggregations
+            )
             output.append(new_row)
 
     return column_names, column_types, output, row_name_columns

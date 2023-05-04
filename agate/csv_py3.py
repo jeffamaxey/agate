@@ -40,16 +40,13 @@ class Reader(six.Iterator):
             else:
                 raise e
 
-        if not self.line_numbers:
-            return row
-        else:
-            if self.line_numbers:
-                if self.header and self.line_num == 1:
-                    row.insert(0, 'line_numbers')
-                else:
-                    row.insert(0, str(self.line_num - 1 if self.header else self.line_num))
+        if self.line_numbers:
+            if self.header and self.line_num == 1:
+                row.insert(0, 'line_numbers')
+            else:
+                row.insert(0, str(self.line_num - 1 if self.header else self.line_num))
 
-            return row
+        return row
 
     @property
     def dialect(self):
@@ -120,11 +117,7 @@ class DictWriter(csv.DictWriter):
         csv.DictWriter.__init__(self, f, fieldnames, **kwargs)
 
     def _append_line_number(self, row):
-        if self.row_count == 0:
-            row['line_number'] = 'line_number'
-        else:
-            row['line_number'] = self.row_count
-
+        row['line_number'] = 'line_number' if self.row_count == 0 else self.row_count
         self.row_count += 1
 
     def writerow(self, row):
@@ -153,7 +146,7 @@ class Sniffer(object):
         try:
             dialect = csv.Sniffer().sniff(sample, POSSIBLE_DELIMITERS)
         except csv.Error as e:
-            warnings.warn('Error sniffing CSV dialect: %s' % e, RuntimeWarning, stacklevel=2)
+            warnings.warn(f'Error sniffing CSV dialect: {e}', RuntimeWarning, stacklevel=2)
             dialect = None
 
         return dialect

@@ -28,16 +28,13 @@ class Mode(Aggregation):
         if not isinstance(column.data_type, Number):
             raise DataTypeError('Sum can only be applied to columns containing Number data.')
 
-        has_nulls = HasNulls(self._column_name).run(table)
-
-        if has_nulls:
+        if has_nulls := HasNulls(self._column_name).run(table):
             warn_null_calculation(self, column)
 
     def run(self, table):
         column = table.columns[self._column_name]
 
-        data = column.values_without_nulls()
-        if data:
+        if data := column.values_without_nulls():
             state = defaultdict(int)
 
             for n in data:

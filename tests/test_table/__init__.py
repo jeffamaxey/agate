@@ -494,7 +494,7 @@ class TestBasic(AgateTestCase):
         self.assertIsNot(new_table, table)
         self.assertColumnNames(new_table, self.column_names)
         self.assertColumnTypes(new_table, [Number, Number, Text])
-        self.assertRows(new_table, self.rows[0:3:2])
+        self.assertRows(new_table, self.rows[:3:2])
 
     def test_limit_slice_negative(self):
         table = Table(self.rows, self.column_names, self.column_types)

@@ -22,11 +22,7 @@ def distinct(self, key=None):
     uniques = []
     rows = []
 
-    if self._row_names is not None:
-        row_names = []
-    else:
-        row_names = None
-
+    row_names = [] if self._row_names is not None else None
     for i, row in enumerate(self._rows):
         if key_is_row_function:
             k = key(row)

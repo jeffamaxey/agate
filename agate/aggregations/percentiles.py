@@ -37,9 +37,7 @@ class Percentiles(Aggregation):
         if not isinstance(column.data_type, Number):
             raise DataTypeError('Percentiles can only be applied to columns containing Number data.')
 
-        has_nulls = HasNulls(self._column_name).run(table)
-
-        if has_nulls:
+        if has_nulls := HasNulls(self._column_name).run(table):
             warn_null_calculation(self, column)
 
     def run(self, table):
@@ -52,7 +50,7 @@ class Percentiles(Aggregation):
         data = column.values_without_nulls_sorted()
 
         if not data:
-            return Quantiles([None for percentile in range(101)])
+            return Quantiles([None for _ in range(101)])
 
         # Zeroth percentile is first datum
         quantiles = [data[0]]
@@ -64,12 +62,7 @@ class Percentiles(Aggregation):
             high = min(len(data), int(math.floor(k + 1)))
 
             # No remainder
-            if low == high:
-                value = data[low - 1]
-            # Remainder
-            else:
-                value = (data[low - 1] + data[high - 1]) / 2
-
+            value = data[low - 1] if low == high else (data[low - 1] + data[high - 1]) / 2
             quantiles.append(value)
 
         # Hundredth percentile is final datum

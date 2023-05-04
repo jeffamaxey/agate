@@ -39,7 +39,4 @@ class MaxLength(Aggregation):
 
         lens = [len(d) for d in column.values_without_nulls()]
 
-        if not lens:
-            return Decimal('0')
-
-        return Decimal(max(lens))
+        return Decimal(max(lens)) if lens else Decimal('0')

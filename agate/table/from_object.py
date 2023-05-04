@@ -66,11 +66,7 @@ def from_object(cls, obj, row_names=None, column_types=None):
     rows = []
 
     for sub in row_objects:
-        r = []
-
-        for name in column_names:
-            r.append(sub.get(name, None))
-
+        r = [sub.get(name, None) for name in column_names]
         rows.append(r)
 
     return Table(rows, column_names, row_names=row_names, column_types=column_types)

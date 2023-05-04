@@ -15,7 +15,7 @@ def print_structure(self, output=sys.stdout, max_rows=None):
     """
     from agate.table import Table
 
-    name_column = [n for n in self._column_names]
+    name_column = list(self._column_names)
     type_column = [t.__class__.__name__ for t in self._column_types]
     rows = zip(name_column, type_column)
     column_names = ['column', 'data_type']
